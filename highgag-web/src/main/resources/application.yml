@@ -1,0 +1,15 @@
+spring.profiles.active: local
+
+server.port: 8888
+
+---
+
+spring:
+  profiles: local
+
+  h2.console:
+    enabled: true
+    path: /h2
+
+app:
+  secretKey: bS3q2SgPA3Xkn9DCt9j/wFyF09xm+yOjTdjz9DoImeM=

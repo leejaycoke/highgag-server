@@ -1,0 +1,38 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE"
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.0.RELEASE"
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.3'
+}
+
+def javaProjects = [project(':highgag-core'), project(':highgag-web')]
+def vJavaLang = '1.8'
+
+ext['hibernate.version'] = '5.2.8.Final'
+
+configure(javaProjects) {
+
+    apply plugin: 'org.springframework.boot'
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: 'java'
+
+    group = 'com.highgag'
+    version = '0.0.1-SNAPSHOT'
+
+    sourceCompatibility = vJavaLang
+    targetCompatibility = vJavaLang
+
+    repositories {
+        mavenCentral()
+    }
+
+}

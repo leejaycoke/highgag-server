@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <springProfile name="local,dev">
+        <logger name="com.leejay.highgag.api" level="DEBUG"/>
+    </springProfile>
+
+    <springProfile name="live">
+        <logger name="com.leejay.highgag.api" level="ERROR"/>
+    </springProfile>
+</configuration>

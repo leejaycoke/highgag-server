@@ -1,0 +1,4 @@
+rootProject.name = 'highgag'
+
+include 'highgag-core'
+include 'highgag-web'
