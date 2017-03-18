@@ -1,9 +1,9 @@
 package com.highgag.web.controller;
 
-import com.highgag.core.entity.Post;
+import com.highgag.core.entity.User;
 import com.highgag.web.exception.HighgagException;
-import com.highgag.web.form.PostWriteForm;
-import com.highgag.web.service.PostService;
+import com.highgag.web.service.UserService;
+import com.highgag.web.user.UserSignupForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,28 +13,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Slf4j
 @RestController
-public class PostController {
+public class UserController {
 
     @Autowired
-    private PostService postService;
+    private UserService userService;
 
-    @RequestMapping(value = "/posts", method = RequestMethod.GET)
-    public List<Post> get() {
-        return postService.getList();
-    }
-
-    @RequestMapping(value = "/posts", method = RequestMethod.POST)
-    public void post(@Valid PostWriteForm form, BindingResult bindingResult) {
+    @RequestMapping(value = "/users", method = RequestMethod.POST)
+    public User post(@Valid UserSignupForm form, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new HighgagException(HttpStatus.BAD_REQUEST)
                     .setFieldErrors(bindingResult.getFieldErrors());
         }
 
-        postService.write(form);
+        return userService.signup(form);
+
     }
 
 }

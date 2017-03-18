@@ -1,11 +1,11 @@
-package com.highgag.web.post;
+package com.highgag.web.form;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 @Data
-public class PostEditForm {
+public class PostWriteForm {
 
     @NotBlank(message = "제목을 입력해주세요.")
     @Length(min = 1, max = 50, message = "제목은 50자까지 가능합니다.")

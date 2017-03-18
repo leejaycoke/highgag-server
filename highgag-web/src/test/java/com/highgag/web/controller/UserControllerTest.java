@@ -1,7 +1,7 @@
 package com.highgag.web.controller;
 
-import com.highgag.web.form.PostWriteForm;
 import com.highgag.web.response.ErrorResponse;
+import com.highgag.web.user.UserSignupForm;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,27 +16,16 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-public class PostControllerTest {
+public class UserControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
 
     @Test
-    public void POST_POST_BADREUQEST_TEST() {
+    public void USER_POST_BADREUQEST_TEST() {
         ResponseEntity<ErrorResponse> entity = restTemplate
-                .postForEntity("http://localhost:8888/posts", new PostWriteForm(), ErrorResponse.class);
+                .postForEntity("http://localhost:8888/users", new UserSignupForm(), ErrorResponse.class);
         Assert.assertEquals(entity.getStatusCodeValue(), 400);
-    }
-
-    @Test
-    public void POST_POST_BADREUQEST_TEST2() {
-        PostWriteForm form = new PostWriteForm();
-        form.setTitle("title");
-        form.setContent("content");
-
-        ResponseEntity<ErrorResponse> entity = restTemplate
-                .postForEntity("http://localhost:8888/posts", form, ErrorResponse.class);
-        Assert.assertEquals(entity.getStatusCodeValue(), 200);
     }
 
 }

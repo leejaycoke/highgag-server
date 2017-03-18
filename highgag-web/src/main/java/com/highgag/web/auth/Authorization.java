@@ -1,5 +1,7 @@
 package com.highgag.web.auth;
 
+import com.highgag.core.domain.Role;
+
 import java.lang.annotation.*;
 
 @Target(ElementType.METHOD)

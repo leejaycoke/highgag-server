@@ -10,10 +10,12 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EntityScan(basePackageClasses = {Jsr310JpaConverters.class}, basePackages = {"com.highgag.core.entity"})
+@EntityScan(basePackages = "com.highgag.core.entity", basePackageClasses = {Jsr310JpaConverters.class})
+@EnableJpaRepositories(basePackages = "com.highgag.core.repository")
 public class HighgagWebApplication {
 
     public static void main(String[] args) {

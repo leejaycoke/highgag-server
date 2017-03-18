@@ -1,6 +1,8 @@
-package com.highgag.web.post;
+package com.highgag.web.service;
 
 import com.highgag.core.entity.Post;
+import com.highgag.core.repository.PostRepository;
+import com.highgag.web.form.PostWriteForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,12 +13,8 @@ import java.util.List;
 @Service
 public class PostService {
 
-    private final PostRepository postRepository;
-
     @Autowired
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+    private PostRepository postRepository;
 
     public void write(PostWriteForm form) {
         Post post = new Post();

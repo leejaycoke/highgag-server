@@ -1,4 +1,4 @@
-package com.highgag.web.auth;
+package com.highgag.core.domain;
 
 public enum Role {
 
