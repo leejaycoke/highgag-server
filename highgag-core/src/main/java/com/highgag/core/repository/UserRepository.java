@@ -7,10 +7,10 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("SELECT COUNT(u.id) FROM User u WHERE u.account = :account")
+    @Query("SELECT COUNT(u.id) > 0 FROM User u WHERE u.account = :account")
     boolean existsByAccount(@Param("account") String account);
 
-    @Query("SELECT COUNT(u.id) FROM User u WHERE u.email = :email")
+    @Query("SELECT COUNT(u.id) > 0 FROM User u WHERE u.email = :email")
     boolean existsByEmail(@Param("email") String email);
 
 }
