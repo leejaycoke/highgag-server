@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.abstractj.kalium.crypto.Random;
 import org.abstractj.kalium.crypto.SecretBox;
 import org.abstractj.kalium.crypto.Util;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -38,11 +38,16 @@ public class TokenService<T> {
         byte[] cipher = secretBox.encrypt(nonce, message); // enc(message)
         String value = Base64.getEncoder().encodeToString(Util.merge(nonce, cipher)); // b64(nonce + enc(message))
 
-        Token token = new Token(value, null);
+        Token token = new Token("Bearer " + value, null);
         return token;
     }
 
     public T decrypt(String encrypted, Class<T> clazz) throws IOException {
+        Assert.notNull(encrypted, "알 수 없는 정보입니다.");
+        Assert.isTrue(encrypted.startsWith("Bearer "), "옳바르지 않은 토큰입니다.");
+
+        encrypted = encrypted.replaceFirst("Bearer ", "");
+
         byte[] value = Base64.getDecoder().decode(encrypted);
         byte[] nonce = Arrays.copyOfRange(value, 0, 24);
         byte[] cipher = Arrays.copyOfRange(value, 24, value.length);
@@ -53,7 +58,6 @@ public class TokenService<T> {
         return token;
     }
 
-    @Autowired
     public void setObjectMapper(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
