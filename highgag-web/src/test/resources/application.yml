@@ -1,6 +1,6 @@
 spring.profiles.active: local
 
-server.port: 8888
+server.port: 18888
 
 ---
 

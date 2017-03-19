@@ -3,9 +3,11 @@ package com.highgag.web.controller;
 import com.highgag.web.form.PostWriteForm;
 import com.highgag.web.response.ErrorResponse;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
@@ -18,25 +20,39 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class PostControllerTest {
 
+    @LocalServerPort
+    private int port;
+
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Test
-    public void POST_POST_BADREUQEST_TEST() {
-        ResponseEntity<ErrorResponse> entity = restTemplate
-                .postForEntity("http://localhost:8888/posts", new PostWriteForm(), ErrorResponse.class);
-        Assert.assertEquals(entity.getStatusCodeValue(), 400);
+    private String baseUrl;
+
+    @Before
+    public void init() {
+        baseUrl = "http://localhost:" + port;
     }
 
     @Test
-    public void POST_POST_BADREUQEST_TEST2() {
+    public void 글등록_실패() {
+        ResponseEntity<ErrorResponse> entity = restTemplate
+                .postForEntity("http://localhost:18888/posts", new PostWriteForm(), ErrorResponse.class);
+        Assert.assertEquals(entity.getStatusCodeValue(), 400);
+        Assert.assertNotNull(entity.getBody());
+        Assert.assertEquals(entity.getBody().getStatusCode(), 400);
+    }
+
+    @Test
+    public void 글등록_성공() {
         PostWriteForm form = new PostWriteForm();
         form.setTitle("title");
         form.setContent("content");
 
-        ResponseEntity<ErrorResponse> entity = restTemplate
-                .postForEntity("http://localhost:8888/posts", form, ErrorResponse.class);
+        ResponseEntity entity = new TestRestTemplate()
+                .postForEntity("http://localhost:18888/posts", form, null);
+
         Assert.assertEquals(entity.getStatusCodeValue(), 200);
+        Assert.assertNull(entity.getBody());
     }
 
 }

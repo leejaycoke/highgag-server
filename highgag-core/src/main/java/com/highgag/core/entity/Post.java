@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
-
 @Data
 @Entity
 public class Post extends BaseEntity {
