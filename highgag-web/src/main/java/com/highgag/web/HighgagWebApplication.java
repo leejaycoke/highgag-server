@@ -63,11 +63,11 @@ public class HighgagWebApplication {
                     errorAttributes.put("message", e.getMessage());
                 } else {
                     if (errorAttributes.containsKey("errors")) {
-                        List<FieldError> fieldErrors = (List<FieldError>) errorAttributes.get("errors");
-                        errorAttributes.put("errors", fieldErrors.stream()
+                        List<FieldError> errors = (List<FieldError>) errorAttributes.get("errors");
+                        errorAttributes.put("errors", errors.stream()
                                 .map(i -> new SimpleFieldError(i.getField(), i.getDefaultMessage()))
                                 .collect(Collectors.toList()));
-                        errorAttributes.put("message", "잘못된 요청입니다.");
+                        errorAttributes.put("message", errors.get(0).getDefaultMessage());
                     }
                 }
 

@@ -12,9 +12,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-/**
- * Created by leejay on 2017. 2. 23..
- */
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -25,17 +22,16 @@ public class UserControllerTest {
 
     @Test
     public void 회원가입_null_데이터_실패() {
-        ResponseEntity<ErrorResponse> entity = testRestTemplate
-                .postForEntity("http://localhost:18888/users", null, ErrorResponse.class);
+        ResponseEntity entity = testRestTemplate
+                .postForEntity("http://localhost:18888/users", null, null);
         Assert.assertEquals(entity.getStatusCodeValue(), 415);
     }
 
     @Test
     public void 회원가입_공백_데이터_실패() {
-        ResponseEntity<ErrorResponse> entity = testRestTemplate
-                .postForEntity("http://localhost:18888/users", new UserSignupForm(), ErrorResponse.class);
+        ResponseEntity entity = testRestTemplate
+                .postForEntity("http://localhost:18888/users", new UserSignupForm(), null);
         Assert.assertEquals(entity.getStatusCodeValue(), 400);
-        Assert.assertEquals(entity.getBody().getFieldErrors().size(), 4);
     }
 
     @Test
