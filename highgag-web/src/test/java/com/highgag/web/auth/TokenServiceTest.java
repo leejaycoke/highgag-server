@@ -24,8 +24,7 @@ public class TokenServiceTest {
         AppConfig appConfig = new AppConfig();
         appConfig.setSecretKey("bS3q2SgPA3Xkn9DCt9j/wFyF09xm+yOjTdjz9DoImeM=");
 
-        tokenService = Mockito.spy(new TokenService<>(appConfig));
-        tokenService.setObjectMapper(new ObjectMapper());
+        tokenService = Mockito.spy(new TokenService<>(appConfig, new ObjectMapper()));
     }
 
     @Test

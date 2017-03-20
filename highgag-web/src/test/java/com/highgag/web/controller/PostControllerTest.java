@@ -34,12 +34,17 @@ public class PostControllerTest {
     }
 
     @Test
-    public void 글등록_실패() {
+    public void 글등록_null데이터_실패() {
+        ResponseEntity<ErrorResponse> entity = restTemplate
+                .postForEntity("http://localhost:18888/posts", null, ErrorResponse.class);
+        Assert.assertEquals(entity.getStatusCodeValue(), 415);
+    }
+
+    @Test
+    public void 글등록_공백데이터_실패() {
         ResponseEntity<ErrorResponse> entity = restTemplate
                 .postForEntity("http://localhost:18888/posts", new PostWriteForm(), ErrorResponse.class);
         Assert.assertEquals(entity.getStatusCodeValue(), 400);
-        Assert.assertNotNull(entity.getBody());
-        Assert.assertEquals(entity.getBody().getStatusCode(), 400);
     }
 
     @Test
@@ -48,7 +53,7 @@ public class PostControllerTest {
         form.setTitle("title");
         form.setContent("content");
 
-        ResponseEntity entity = new TestRestTemplate()
+        ResponseEntity entity = restTemplate
                 .postForEntity("http://localhost:18888/posts", form, null);
 
         Assert.assertEquals(entity.getStatusCodeValue(), 200);

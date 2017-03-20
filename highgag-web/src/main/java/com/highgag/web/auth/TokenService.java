@@ -22,13 +22,15 @@ public class TokenService<T> {
 
     private Random random = new Random();
 
-    private SecretBox secretBox;
+    private final SecretBox secretBox;
 
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    public TokenService(AppConfig config) {
+    public TokenService(AppConfig config, ObjectMapper objectMapper) {
         byte[] secretKey = Base64.getDecoder().decode(config.getSecretKey());
         secretBox = new SecretBox(secretKey);
+
+        this.objectMapper = objectMapper;
     }
 
     public Token issue(T object) throws IOException {
@@ -56,10 +58,6 @@ public class TokenService<T> {
 
         T token = objectMapper.readValue(message, clazz);
         return token;
-    }
-
-    public void setObjectMapper(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
     }
 
 }

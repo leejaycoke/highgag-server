@@ -1,5 +1,6 @@
 package com.highgag.web.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -8,6 +9,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserSignupForm {
 
     @NotBlank(message = "아이디를 입력해주세요.")
@@ -16,7 +18,7 @@ public class UserSignupForm {
     private String account;
 
     @NotBlank(message = "이름을 입력해주세요.")
-    @Length(min = 6, max = 12, message = "이름은 6~12자까지 입력할 수 있습니다.")
+    @Length(min = 3, max = 12, message = "이름은 3~12자까지 입력할 수 있습니다.")
     @Pattern(regexp = "^[a-z0-9가-힣]+$", message = "이름은 한글,영어,숫자만 입력할 수 있습니다.")
     private String name;
 

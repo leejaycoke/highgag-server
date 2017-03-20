@@ -13,3 +13,5 @@ spring:
 
 app:
   secretKey: bS3q2SgPA3Xkn9DCt9j/wFyF09xm+yOjTdjz9DoImeM=
+
+logging.level.com.highgag: DEBUG
