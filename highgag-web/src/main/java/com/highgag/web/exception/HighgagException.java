@@ -1,22 +1,17 @@
 package com.highgag.web.exception;
 
 import com.highgag.web.response.SimpleFieldError;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
-@Getter
+@Data
 public class HighgagException extends RuntimeException {
 
     private int statusCode;
 
-    private List<SimpleFieldError> fieldErrors = new ArrayList<>();
+    private List<SimpleFieldError> errors;
 
     private final static Map<Integer, String> STATUS_MESSAGES = new HashMap<>();
 
@@ -29,17 +24,21 @@ public class HighgagException extends RuntimeException {
         this.statusCode = httpStatus.value();
     }
 
-    public HighgagException setFieldErrors(List<FieldError> fieldErrors) {
-        this.fieldErrors.clear();
-        this.fieldErrors.addAll(fieldErrors.stream()
-                .map(i -> new SimpleFieldError(i.getField(), i.getDefaultMessage()))
-                .collect(Collectors.toList()));
+    public HighgagException setErrors(List<SimpleFieldError> errors) {
+        this.errors = errors;
         return this;
     }
 
-    public HighgagException setFieldError(String field, String message) {
-        this.fieldErrors.clear();
-        this.fieldErrors.add(new SimpleFieldError(field, message));
+    public HighgagException setError(String field, String message) {
+        errors = Collections.singletonList(new SimpleFieldError(field, message));
+        return this;
+    }
+
+    public HighgagException addError(String field, String message) {
+        if (errors == null) {
+            errors = new ArrayList<>();
+        }
+        errors.add(new SimpleFieldError(field, message));
         return this;
     }
 

@@ -1,7 +1,6 @@
 package com.highgag.web.controller;
 
 import com.highgag.web.form.PostWriteForm;
-import com.highgag.web.response.ErrorResponse;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

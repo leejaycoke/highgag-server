@@ -1,7 +1,6 @@
 package com.highgag.web.controller;
 
 import com.highgag.web.auth.Token;
-import com.highgag.web.response.ErrorResponse;
 import com.highgag.web.user.UserSignupForm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;

@@ -35,12 +35,12 @@ public class UserService {
     public Token signup(UserSignupForm form) throws IOException {
         if (userRepository.existsByAccount(form.getAccount())) {
             throw new HighgagException(HttpStatus.BAD_REQUEST)
-                    .setFieldError("account", "이미 사용중인 아이디입니다.");
+                    .setError("account", "이미 사용중인 아이디입니다.");
         }
 
         if (userRepository.existsByEmail(form.getEmail())) {
             throw new HighgagException(HttpStatus.BAD_REQUEST)
-                    .setFieldError("email", "이미 사용중인 이메일 입니다.");
+                    .setError("email", "이미 사용중인 이메일입니다.");
         }
 
         User user = new User();
