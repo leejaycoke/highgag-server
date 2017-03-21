@@ -3,6 +3,7 @@ package com.highgag.web.service;
 import com.highgag.core.domain.Role;
 import com.highgag.core.entity.User;
 import com.highgag.core.repository.UserRepository;
+import com.highgag.web.auth.ScryptService;
 import com.highgag.web.auth.Session;
 import com.highgag.web.auth.Token;
 import com.highgag.web.auth.TokenService;
@@ -23,6 +24,9 @@ public class UserService {
 
     @Autowired
     private TokenService<Session> tokenService;
+
+    @Autowired
+    private ScryptService scryptService;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -47,7 +51,7 @@ public class UserService {
         user.setAccount(form.getAccount());
         user.setName(form.getName());
         user.setEmail(form.getEmail());
-        user.setPassword(form.getPassword());
+        user.setPassword(scryptService.encrypt(form.getPassword()));
         user.setRole(Role.MEMBER);
         userRepository.save(user);
 

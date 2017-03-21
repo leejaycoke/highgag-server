@@ -1,5 +1,6 @@
 package com.highgag.web.controller;
 
+import com.highgag.web.auth.ScryptService;
 import com.highgag.web.auth.Token;
 import com.highgag.web.service.UserService;
 import com.highgag.web.user.UserSignupForm;
@@ -19,6 +20,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ScryptService scryptService;
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public Token post(@Valid @RequestBody UserSignupForm form) throws IOException {

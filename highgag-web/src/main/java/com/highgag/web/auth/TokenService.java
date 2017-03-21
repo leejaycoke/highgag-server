@@ -27,7 +27,7 @@ public class TokenService<T> {
     private final ObjectMapper objectMapper;
 
     public TokenService(AppConfig config, ObjectMapper objectMapper) {
-        byte[] secretKey = Base64.getDecoder().decode(config.getSecretKey());
+        byte[] secretKey = Base64.getDecoder().decode(config.getAuth().getSecretKey());
         secretBox = new SecretBox(secretKey);
 
         this.objectMapper = objectMapper;

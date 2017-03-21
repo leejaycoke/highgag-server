@@ -9,6 +9,21 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "app")
 public class AppConfig {
 
-    private String secretKey;
+    private Auth auth;
+
+    private Scrypt scrypt;
+
+    @Data
+    public static class Auth {
+        private String secretKey;
+        private int expireSeconds;
+    }
+
+    @Data
+    public static class Scrypt {
+        private int n;
+        private int r;
+        private int p;
+    }
 
 }
