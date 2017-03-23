@@ -1,31 +1,26 @@
 package com.highgag.web.auth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.highgag.core.domain.Role;
-import com.highgag.web.config.AppConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 
 @Slf4j
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class TokenServiceTest {
 
+    @Autowired
     private TokenService<Session> tokenService;
 
     private final static String PRE_GENERATED_TOKEN = "Bearer ERBcYnrGs5KG3C1iUdz9yxOFYY7V7wjabvDzkN0xu/6ThuAcd+6mSHWHhf1" +
             "bMVrQHYLvjWYkHgsZoq0dcBrMogdZoXKZ1WVNeKLGD7ZkVzqvsMIX";
-
-    @Before
-    public void init() {
-        AppConfig appConfig = new AppConfig();
-        appConfig.setSecretKey("bS3q2SgPA3Xkn9DCt9j/wFyF09xm+yOjTdjz9DoImeM=");
-
-        tokenService = Mockito.spy(new TokenService<>(appConfig, new ObjectMapper()));
-    }
 
     @Test
     public void 토큰_인코딩_성공() throws IOException {

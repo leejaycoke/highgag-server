@@ -24,10 +24,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@SpringBootApplication
 @EnableJpaAuditing
 @EntityScan(basePackages = "com.highgag.core.entity", basePackageClasses = {Jsr310JpaConverters.class})
 @EnableJpaRepositories(basePackages = "com.highgag.core.repository")
+@SpringBootApplication
 public class HighgagWebApplication {
 
     public static void main(String[] args) {
@@ -46,6 +46,17 @@ public class HighgagWebApplication {
                 .registerModules(new JavaTimeModule());
         return objectMapper;
     }
+
+//    @Bean
+//    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
+//        return new WebMvcConfigurerAdapter() {
+//            @Override
+//            public void addInterceptors(InterceptorRegistry registry) {
+//                registry.addInterceptor(new AuthInterceptor())
+//                        .addPathPatterns("/posts/*", "/users/*");
+//            }
+//        };
+//    }
 
     @Bean
     public ErrorAttributes errorAttributes() {

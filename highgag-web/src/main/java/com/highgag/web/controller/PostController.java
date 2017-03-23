@@ -1,6 +1,8 @@
 package com.highgag.web.controller;
 
+import com.highgag.core.domain.Role;
 import com.highgag.core.entity.Post;
+import com.highgag.web.auth.Authorization;
 import com.highgag.web.form.PostWriteForm;
 import com.highgag.web.service.PostService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,7 @@ public class PostController {
     }
 
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
+    @Authorization(roles = Role.ADMIN)
     public void post(@Valid @RequestBody PostWriteForm form) {
         postService.write(form);
     }

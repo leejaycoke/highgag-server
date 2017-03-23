@@ -1,4 +1,4 @@
-package com.highgag.web.user;
+package com.highgag.web.form;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
