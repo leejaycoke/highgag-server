@@ -74,7 +74,6 @@ public class HighgagWebApplication {
                 if (throwable instanceof HighgagException) {
                     HighgagException e = (HighgagException) throwable;
                     errorAttributes.put("errors", e.getErrors());
-                    errorAttributes.put("status", e.getStatusCode());
                     errorAttributes.put("message", e.getMessage());
                 } else {
                     if (errorAttributes.containsKey("errors")) {
@@ -85,6 +84,9 @@ public class HighgagWebApplication {
                         errorAttributes.put("message", errors.get(0).getDefaultMessage());
                     }
                 }
+
+                errorAttributes.remove("exception");
+                errorAttributes.remove("path");
 
                 return errorAttributes;
             }
