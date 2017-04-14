@@ -24,17 +24,13 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Autowired
-    private TokenService<Session> tokenService;
+    private TokenService tokenService;
 
     @Autowired
     private ScryptService scryptService;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    public void setTokenService(TokenService<Session> tokenService) {
-        this.tokenService = tokenService;
     }
 
     public Token signin(UserSigninForm form) throws IOException {
@@ -62,12 +58,14 @@ public class UserService {
                     .setError("email", "이미 사용중인 이메일입니다.");
         }
 
-        User user = new User();
-        user.setAccount(form.getAccount());
-        user.setName(form.getName());
-        user.setEmail(form.getEmail());
-        user.setPassword(scryptService.encrypt(form.getPassword()));
-        user.setRole(Role.MEMBER);
+        User user = User.builder()
+                .account(form.getAccount())
+                .name(form.getName())
+                .email(form.getEmail())
+                .password(scryptService.encrypt(form.getPassword()))
+                .role(Role.MEMBER)
+                .build();
+
         userRepository.save(user);
 
         Session session = new Session(user.getId(), user.getAccount(), user.getRole());

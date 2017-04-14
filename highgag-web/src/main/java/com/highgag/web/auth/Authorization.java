@@ -11,4 +11,5 @@ public @interface Authorization {
 
     Role[] roles() default Role.ALL;
 
+    boolean allowGuest() default false;
 }

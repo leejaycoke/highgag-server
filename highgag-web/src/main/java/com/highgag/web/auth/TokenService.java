@@ -10,15 +10,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Base64;
 
 @Slf4j
 @Component
-public class TokenService<T> {
-
-    private final static Charset utf8 = Charset.forName("utf-8");
+public class TokenService {
 
     private Random random = new Random();
 
@@ -26,25 +24,30 @@ public class TokenService<T> {
 
     private final ObjectMapper objectMapper;
 
+    private final int expireSeconds;
+
     public TokenService(AppConfig config, ObjectMapper objectMapper) {
         byte[] secretKey = Base64.getDecoder().decode(config.getAuth().getSecretKey());
-        secretBox = new SecretBox(secretKey);
-
+        this.secretBox = new SecretBox(secretKey);
+        this.expireSeconds = config.getAuth().getExpireSeconds();
         this.objectMapper = objectMapper;
     }
 
-    public Token issue(T object) throws IOException {
+    public Token issue(Session session) throws IOException {
+        LocalDateTime expiresAt = LocalDateTime.now().plusSeconds(expireSeconds);
+        session.setExpiresAt(expiresAt);
+
         byte[] nonce = random.randomBytes(24); // nonce
-        byte[] message = objectMapper.writeValueAsBytes(object); // message
+        byte[] message = objectMapper.writeValueAsBytes(session); // message
 
         byte[] cipher = secretBox.encrypt(nonce, message); // enc(message)
         String value = Base64.getEncoder().encodeToString(Util.merge(nonce, cipher)); // b64(nonce + enc(message))
 
-        Token token = new Token("Bearer " + value, null);
+        Token token = new Token("Bearer " + value, expiresAt);
         return token;
     }
 
-    public T decrypt(String encrypted, Class<T> clazz) throws IOException {
+    public Session decrypt(String encrypted) throws IOException {
         Assert.notNull(encrypted, "알 수 없는 정보입니다.");
         Assert.isTrue(encrypted.startsWith("Bearer "), "옳바르지 않은 토큰입니다.");
 
@@ -56,8 +59,8 @@ public class TokenService<T> {
 
         byte[] message = secretBox.decrypt(nonce, cipher);
 
-        T token = objectMapper.readValue(message, clazz);
-        return token;
+        Session session = objectMapper.readValue(message, Session.class);
+        return session;
     }
 
 }

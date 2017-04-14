@@ -14,7 +14,6 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.validation.FieldError;
@@ -28,7 +27,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @EnableJpaAuditing
-@EntityScan(basePackages = "com.highgag.core.entity", basePackageClasses = {Jsr310JpaConverters.class})
+@EntityScan(basePackages = "com.highgag.core.entity")
 @EnableJpaRepositories(basePackages = "com.highgag.core.repository")
 @SpringBootApplication
 public class HighgagWebApplication {

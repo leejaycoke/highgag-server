@@ -18,7 +18,7 @@ import java.util.List;
 public class AuthInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private TokenService<Session> tokenService;
+    private TokenService tokenService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -32,12 +32,19 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         String accessToken = request.getHeader("Authorization");
         if (accessToken == null) {
+            if (authorization.allowGuest()) {
+                return true;
+            }
+
             throw unauthorized();
         }
 
         Session session;
         try {
-            session = tokenService.decrypt(accessToken, Session.class);
+            session = tokenService.decrypt(accessToken);
+            if (session.isExpired()) {
+                throw unauthorized();
+            }
         } catch (Exception e) {
             throw unauthorized();
         }
