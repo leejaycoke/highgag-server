@@ -11,7 +11,7 @@ public class HighgagException extends RuntimeException {
 
     private int statusCode;
 
-    private List<SimpleFieldError> errors;
+    private List<SimpleFieldError> errors = new ArrayList<>();
 
     private final static Map<Integer, String> STATUS_MESSAGES = new HashMap<>();
 
@@ -35,9 +35,6 @@ public class HighgagException extends RuntimeException {
     }
 
     public HighgagException addError(String field, String message) {
-        if (errors == null) {
-            errors = new ArrayList<>();
-        }
         errors.add(new SimpleFieldError(field, message));
         return this;
     }

@@ -3,6 +3,7 @@ package com.highgag.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.highgag.web.auth.AuthInterceptor;
 import com.highgag.web.exception.HighgagException;
 import com.highgag.web.response.SimpleFieldError;
 import lombok.extern.slf4j.Slf4j;
@@ -13,21 +14,22 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.validation.FieldError;
 import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
-@SpringBootApplication
 @EnableJpaAuditing
-@EntityScan(basePackages = "com.highgag.core.entity", basePackageClasses = {Jsr310JpaConverters.class})
+@EntityScan(basePackages = "com.highgag.core.entity")
 @EnableJpaRepositories(basePackages = "com.highgag.core.repository")
+@SpringBootApplication
 public class HighgagWebApplication {
 
     public static void main(String[] args) {
@@ -48,6 +50,18 @@ public class HighgagWebApplication {
     }
 
     @Bean
+    public WebMvcConfigurerAdapter webMvcConfigurerAdapter() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addInterceptors(InterceptorRegistry registry) {
+                registry.addInterceptor(new AuthInterceptor())
+                        .addPathPatterns("/**");
+                super.addInterceptors(registry);
+            }
+        };
+    }
+
+    @Bean
     public ErrorAttributes errorAttributes() {
         return new DefaultErrorAttributes() {
             @SuppressWarnings("unchecked")
@@ -59,7 +73,6 @@ public class HighgagWebApplication {
                 if (throwable instanceof HighgagException) {
                     HighgagException e = (HighgagException) throwable;
                     errorAttributes.put("errors", e.getErrors());
-                    errorAttributes.put("status", e.getStatusCode());
                     errorAttributes.put("message", e.getMessage());
                 } else {
                     if (errorAttributes.containsKey("errors")) {
@@ -70,6 +83,9 @@ public class HighgagWebApplication {
                         errorAttributes.put("message", errors.get(0).getDefaultMessage());
                     }
                 }
+
+                errorAttributes.remove("exception");
+                errorAttributes.remove("path");
 
                 return errorAttributes;
             }

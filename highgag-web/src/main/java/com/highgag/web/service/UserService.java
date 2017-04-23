@@ -8,7 +8,8 @@ import com.highgag.web.auth.Session;
 import com.highgag.web.auth.Token;
 import com.highgag.web.auth.TokenService;
 import com.highgag.web.exception.HighgagException;
-import com.highgag.web.user.UserSignupForm;
+import com.highgag.web.form.UserSigninForm;
+import com.highgag.web.form.UserSignupForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Autowired
-    private TokenService<Session> tokenService;
+    private TokenService tokenService;
 
     @Autowired
     private ScryptService scryptService;
@@ -32,8 +33,18 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void setTokenService(TokenService<Session> tokenService) {
-        this.tokenService = tokenService;
+    public Token signin(UserSigninForm form) throws IOException {
+        User user = userRepository.findByAccount(form.getAccount());
+        if (user == null) {
+            throw new HighgagException(HttpStatus.NOT_FOUND, "아이디 혹은 비밀번호를 찾을 수 없습니다.");
+        }
+
+        if (!scryptService.check(form.getPassword(), user.getPassword())) {
+            throw new HighgagException(HttpStatus.NOT_FOUND, "아이디 혹은 비밀번호를 찾을 수 없습니다.");
+        }
+
+        Token token = tokenService.issue(new Session(user.getId(), user.getAccount(), user.getRole()));
+        return token;
     }
 
     public Token signup(UserSignupForm form) throws IOException {
@@ -47,12 +58,14 @@ public class UserService {
                     .setError("email", "이미 사용중인 이메일입니다.");
         }
 
-        User user = new User();
-        user.setAccount(form.getAccount());
-        user.setName(form.getName());
-        user.setEmail(form.getEmail());
-        user.setPassword(scryptService.encrypt(form.getPassword()));
-        user.setRole(Role.MEMBER);
+        User user = User.builder()
+                .account(form.getAccount())
+                .name(form.getName())
+                .email(form.getEmail())
+                .password(scryptService.encrypt(form.getPassword()))
+                .role(Role.MEMBER)
+                .build();
+
         userRepository.save(user);
 
         Session session = new Session(user.getId(), user.getAccount(), user.getRole());
