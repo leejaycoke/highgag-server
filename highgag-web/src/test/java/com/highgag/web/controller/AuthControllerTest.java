@@ -1,6 +1,5 @@
 package com.highgag.web.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.highgag.web.auth.Token;
 import com.highgag.web.form.UserSigninForm;
 import com.highgag.web.form.UserSignupForm;
@@ -36,15 +35,11 @@ public class AuthControllerTest {
                     return execution.execute(request, body);
                 }));
 
-    }
-
-    public void 로그인_테스트를위해_미리_회원가입() {
         UserSignupForm form = new UserSignupForm();
         form.setAccount("leejaycoke");
         form.setEmail("leejaycoke@gmail.com");
         form.setName("이주현");
         form.setPassword("asdf1234");
-
         testRestTemplate
                 .postForEntity("http://localhost:18888/auth/signup", form, null);
     }
@@ -93,8 +88,6 @@ public class AuthControllerTest {
 
     @Test
     public void 로그인_성공() {
-        로그인_테스트를위해_미리_회원가입();
-
         UserSigninForm form = new UserSigninForm();
         form.setAccount("leejaycoke");
         form.setPassword("asdf1234");

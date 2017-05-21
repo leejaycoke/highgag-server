@@ -29,6 +29,14 @@ public class UserService {
     @Autowired
     private ScryptService scryptService;
 
+    public User get(Long id) {
+        User user = userRepository.findOne(id);
+        if (user == null) {
+            throw new HighgagException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다.");
+        }
+        return user;
+    }
+
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
